@@ -148,12 +148,16 @@ def make_input(
 
            cell_medium=False,
 
-
            dx_s = 50, #[pc]
            adaptive_smoothing=False,
            n_targ_nbr=5,
            n_job_smoothing=32,
-
+    
+           on_the_fly_dust=False,
+           mC_small = [],
+           mC_large = [],
+           mSil_small = [],
+           mSil_large = [],
            ):
     
     #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -225,7 +229,7 @@ def make_input(
         dx_adaptive = distances[:,n_targ_nbr]*1e3 #kpc to pc
         print("done -- calculating distance to the Nth-nearest neighbor (N=%s)"%(n_targ_nbr))
         
-    if metal_dependent_dust == True:
+    if on_the_fly_dust in [False,'false'] and metal_dependent_dust in [True,'true']:
         print("start -- calculating metallicity dependent Dust-to-Gas ratio")
         if mtd_mod == 'Li2019':
             log_metal_c = np.log10(metal_c/Zsun)
@@ -469,14 +473,18 @@ def make_input(
         m_c_ind, metal_c_ind, T_c_ind = 6, 7, 8
 
         gas_arr_len = T_c_ind+1
-        if import_velocity_gas == 'true':
+        if import_velocity_gas == 'true' or import_velocity_gas == True:
             vx_c_ind, vy_c_ind, vz_c_ind = gas_arr_len, gas_arr_len+1, gas_arr_len+2
             gas_arr_len += 3
 
-        if import_dispersion_gas == 'true':
+        if import_dispersion_gas == 'true' or import_dispersion_gas == True:
             sig_c_ind = gas_arr_len
             gas_arr_len += 1
-
+        
+        if on_the_fly_dust == 'true' or on_the_fly_dust == True:
+            mCs_c_ind, mCl_c_ind, mSils_c_ind, mSill_c_ind = gas_arr_len, gas_arr_len+1, gas_arr_len+2, gas_arr_len+3
+            gas_arr_len += 4
+            
         gas_arr = np.empty((len(x_c), gas_arr_len))
 
         gas_arr[:,x_min_ind] = x_c-0.5*dx_c
@@ -485,15 +493,20 @@ def make_input(
         gas_arr[:,y_max_ind] = y_c+0.5*dx_c
         gas_arr[:,z_min_ind] = z_c-0.5*dx_c
         gas_arr[:,z_max_ind] = z_c+0.5*dx_c
-        if import_velocity_gas == 'true':
-            gas_arr[:,vx_c_ind] = vx_c
-            gas_arr[:,vy_c_ind] = vy_c
-            gas_arr[:,vz_c_ind] = vz_c
-        if import_dispersion_gas == 'true':
-            gas_arr[:,sig_c_ind] = np.ones(len(x_c))*sig_c
         gas_arr[:,m_c_ind] = m_c/(1e3*dx_c)**3
         gas_arr[:,metal_c_ind] = metal_c
         gas_arr[:,T_c_ind] = T_c
+        if import_velocity_gas == 'true' or import_velocity_gas == True:
+            gas_arr[:,vx_c_ind] = vx_c
+            gas_arr[:,vy_c_ind] = vy_c
+            gas_arr[:,vz_c_ind] = vz_c
+        if import_dispersion_gas == 'true' or import_dispersion_gas == True:
+            gas_arr[:,sig_c_ind] = np.ones(len(x_c))*sig_c
+        if on_the_fly_dust == 'true' or on_the_fly_dust == True:
+            gas_arr[:,mCs_c_ind] = mC_small/(1e3*dx_c)**3
+            gas_arr[:,mCl_c_ind] = mC_large/(1e3*dx_c)**3
+            gas_arr[:,mSils_c_ind] = mSil_small/(1e3*dx_c)**3
+            gas_arr[:,mSill_c_ind] = mSil_large/(1e3*dx_c)**3
 
         header = "Column %s: x-min (kpc)\n" %(x_min_ind+1)
         header += "Column %s: y-min (kpc)\n" %(y_min_ind+1)   
@@ -504,12 +517,17 @@ def make_input(
         header += "Column %s: mass volume density (Msun/pc3)\n" %(m_c_ind+1)
         header += "Column %s: metallicity (1)\n" %(metal_c_ind+1)
         header += "Column %s: temperature (K)\n" %(T_c_ind+1)
-        if import_velocity_gas == 'true':
+        if import_velocity_gas == 'true' or import_velocity_gas == True:
             header += "Column %s: velocity x (km/s)\n" %(vx_c_ind+1)
             header += "Column %s: velocity y (km/s)\n" %(vy_c_ind+1)
             header += "Column %s: velocity z (km/s)\n" %(vz_c_ind+1)
-        if import_dispersion_gas == 'true':
+        if import_dispersion_gas == 'true' or import_dispersion_gas == True:
             header += "Column %s: velocity dispersion (km/s)\n" %(sig_c_ind+1)
+        if on_the_fly_dust == 'true' or on_the_fly_dust == True:
+            header += "Column %s: small carbonaceous density (Msun/pc3)\n" %(mCs_c_ind+1)
+            header += "Column %s: large carbonaceous density (Msun/pc3)\n" %(mCl_c_ind+1)
+            header += "Column %s: small silicates density (Msun/pc3)\n" %(mSils_c_ind+1)
+            header += "Column %s: large silicates density (Msun/pc3)\n" %(mSill_c_ind+1)
 
         np.savetxt(
             gas_fbase+gas_fname,

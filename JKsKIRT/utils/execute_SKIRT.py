@@ -46,7 +46,11 @@ def make_INSKI(
                T_c,metal_c,
                param,
                pos_ctr,
-               vel_ctr,    
+               vel_ctr,
+               mC_small = [],
+               mC_large = [],
+               mSil_small = [],
+               mSil_large = []
                 ):
     
     os.makedirs(param.repo+param.repo_output,exist_ok=True)
@@ -73,6 +77,12 @@ def make_INSKI(
                            m_c=m_c,
                            T_c=T_c,
                            metal_c=metal_c,
+                           
+                           on_the_fly_dust=param.on_the_fly_dust,             
+                           mC_small=mC_small,
+                           mC_large=mC_large,
+                           mSil_small=mSil_small,
+                           mSil_large=mSil_large,
         
                            pos_ctr=pos_ctr,
                            vel_ctr=vel_ctr,
@@ -165,6 +175,13 @@ def make_INSKI(
                    N_Si=param.N_Si,
                    N_C=param.N_C,
                    N_PAH=param.N_PAH,
+                   on_the_fly_dust=param.on_the_fly_dust,
+                   minSize=param.minSize, #[cm]
+                   maxSize=param.maxSize,
+                   centroid_small=param.centroid_small,
+                   centroid_large=param.centroid_large,
+                   width_small=param.width_small,
+                   width_large=param.width_large,
                    numDensitySamples=param.numDensitySamples,
                    numPropertySamples=param.numPropertySamples,
                    aggregateVelocity=param.aggregateVelocity,
@@ -193,6 +210,7 @@ def make_INSKI(
                    include2MASS=param.include2MASS,
                    includeWISE=param.includeWISE,
                    includeHERSCHEL=param.includeHERSCHEL,
+                   CustomFilterList=param.CustomFilterList,
                    inst_dist_unit=param.inst_dist_unit,
                    inst_dist=param.inst_dist,
                    inc_default=param.inc_default,

@@ -85,6 +85,14 @@ def writing_ski(
                N_C=8,
                N_PAH=8,
                
+               on_the_fly_dust=False,
+               minSize=1e-7, #[cm]
+               maxSize=1e-4,
+               centroid_small=5e-7,
+               centroid_large=1e-5,
+               width_small=7.5e-1,
+               width_large=7.5e-1,
+    
                #!!! Sampling options
                numDensitySamples=100,
                numPropertySamples=1,
@@ -121,6 +129,7 @@ def writing_ski(
                include2MASS='true',
                includeWISE='false',
                includeHERSCHEL='false',
+               CustomFilterList=[],
 
                #@@@ instrument sys
                #@@@!!! general setting
@@ -278,6 +287,15 @@ def writing_ski(
                                   N_Si=N_Si,
                                   N_C=N_C,
                                   N_PAH=N_PAH,
+                                 
+                                  on_the_fly_dust=on_the_fly_dust,
+                                  minSize=minSize,
+                                  maxSize=maxSize,
+                                  centroid_small=centroid_small,
+                                  width_small=width_small,
+                                  centroid_large=centroid_large,
+                                  width_large=width_large,
+
                                   numDensitySamples=numDensitySamples,
                                   numPropertySamples=numPropertySamples,
                                   aggregateVelocity=aggregateVelocity,
@@ -313,6 +331,7 @@ def writing_ski(
                                    include2MASS=include2MASS,
                                    includeWISE=includeWISE,
                                    includeHERSCHEL=includeHERSCHEL,
+                                   CustomFilterList=CustomFilterList,
                                    inst_dist_unit=inst_dist_unit,
                                    inst_dist=inst_dist,
                                    inc_default=inc_default,

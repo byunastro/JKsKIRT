@@ -13,6 +13,7 @@ def Inst_System(
                include2MASS,
                includeWISE,
                includeHERSCHEL,
+               CustomFilterList,
 
                inst_dist_unit,
                inst_dist,
@@ -96,20 +97,20 @@ def Inst_System(
     #!!!
     
     if inc_min != inc_max:
-        inc_space = np.linspace(inc_min,inc_max,int((inc_max-inc_min)/inc_del+1)).astype(np.int)
+        inc_space = np.linspace(inc_min,inc_max,int((inc_max-inc_min)/inc_del+1)).astype(np.int32)
     else:
-        inc_space = np.array([inc_min]).astype(np.int)
+        inc_space = np.array([inc_min]).astype(np.int32)
     
     if azm_min != azm_max:
-        azm_space = np.linspace(azm_min,azm_max,int((azm_max-azm_min)/azm_del+1)).astype(np.int)
+        azm_space = np.linspace(azm_min,azm_max,int((azm_max-azm_min)/azm_del+1)).astype(np.int32)
     else:
-        azm_space = np.array([azm_min]).astype(np.int)
+        azm_space = np.array([azm_min]).astype(np.int32)
         
     if save_1d_sed == True:
         if aperture_min != aperture_max:
-            aptr_space = np.linspace(aperture_min,aperture_max,int((aperture_max-aperture_min)/aper_del+1)).astype(np.int)
+            aptr_space = np.linspace(aperture_min,aperture_max,int((aperture_max-aperture_min)/aper_del+1)).astype(np.int32)
         else:
-            aptr_space = np.array([aperture_min]).astype(np.int)
+            aptr_space = np.array([aperture_min]).astype(np.int32)
         
     #!!!
     
@@ -152,7 +153,24 @@ def Inst_System(
 #                 fname_ij = 'rot_%s_%s'%(inc_i,azm_j)  
             
             if inst_2d_sed_on == False or inst_2d_sed_on == 'false':
-                print((N_idt+3)*indent+'<FullInstrument instrumentName="%s" distance="%s %s" inclination="%s deg" azimuth="%s deg" roll="%s deg" fieldOfViewX="%s %s" numPixelsX="%s" centerX="%s %s" fieldOfViewY="%s %s" numPixelsY="%s" centerY="%s %s" recordComponents="%s" numScatteringLevels="%s" recordPolarization="%s" recordStatistics="%s"/>'%(fname_ij,inst_dist,inst_dist_unit,inc_i,azm_j,roll_default,fov_X,fov_unit,Npix_X,centre_X,fov_unit,fov_Y,fov_unit,Npix_Y,centre_Y,fov_unit,recordComponents,numScatteringLevels,recordPolarization,recordStatistics),file=wfile)
+                if len(CustomFilterList) == 0:
+                    print((N_idt+3)*indent+'<FullInstrument instrumentName="%s" distance="%s %s" inclination="%s deg" azimuth="%s deg" roll="%s deg" fieldOfViewX="%s %s" numPixelsX="%s" centerX="%s %s" fieldOfViewY="%s %s" numPixelsY="%s" centerY="%s %s" recordComponents="%s" numScatteringLevels="%s" recordPolarization="%s" recordStatistics="%s"/>'%(fname_ij,inst_dist,inst_dist_unit,inc_i,azm_j,roll_default,fov_X,fov_unit,Npix_X,centre_X,fov_unit,fov_Y,fov_unit,Npix_Y,centre_Y,fov_unit,recordComponents,numScatteringLevels,recordPolarization,recordStatistics),file=wfile)
+                else:
+                    print((N_idt+3)*indent+'<FullInstrument instrumentName="%s" distance="%s %s" inclination="%s deg" azimuth="%s deg" roll="%s deg" fieldOfViewX="%s %s" numPixelsX="%s" centerX="%s %s" fieldOfViewY="%s %s" numPixelsY="%s" centerY="%s %s" recordComponents="%s" numScatteringLevels="%s" recordPolarization="%s" recordStatistics="%s">'%(fname_ij,inst_dist,inst_dist_unit,inc_i,azm_j,roll_default,fov_X,fov_unit,Npix_X,centre_X,fov_unit,fov_Y,fov_unit,Npix_Y,centre_Y,fov_unit,recordComponents,numScatteringLevels,recordPolarization,recordStatistics),file=wfile)
+                    print((N_idt+4)*indent+'<wavelengthGrid type="WavelengthGrid">',file=wfile) 
+                    print((N_idt+5)*indent+'<ConfigurableBandWavelengthGrid>',file=wfile)
+                    print((N_idt+6)*indent+'<bands type="Band">',file=wfile)
+                    
+                    cfl = 0
+                    while cfl < len(CustomFilterList):
+                        print((N_idt+7)*indent+'<FileBand filename="%s"/>'%(CustomFilterList[cfl]),file=wfile)
+                        cfl += 1
+                    
+                    print((N_idt+6)*indent+'</bands>',file=wfile)
+                    print((N_idt+5)*indent+'</ConfigurableBandWavelengthGrid>',file=wfile)
+                    print((N_idt+4)*indent+'</wavelengthGrid>',file=wfile)
+                    print((N_idt+3)*indent+'</FullInstrument>',file=wfile)
+                    
             else:
                 print((N_idt+3)*indent+'<FullInstrument instrumentName="%s" distance="%s %s" inclination="%s deg" azimuth="%s deg" roll="%s deg" fieldOfViewX="%s %s" numPixelsX="%s" centerX="%s %s" fieldOfViewY="%s %s" numPixelsY="%s" centerY="%s %s" recordComponents="%s" numScatteringLevels="%s" recordPolarization="%s" recordStatistics="%s">'%(fname_ij,inst_dist,inst_dist_unit,inc_i,azm_j,roll_default,fov_X,fov_unit,Npix_X,centre_X,fov_unit,fov_Y,fov_unit,Npix_Y,centre_Y,fov_unit,recordComponents,numScatteringLevels,recordPolarization,recordStatistics),file=wfile)
                 print((N_idt+4)*indent+'<wavelengthGrid type="WavelengthGrid">',file=wfile)

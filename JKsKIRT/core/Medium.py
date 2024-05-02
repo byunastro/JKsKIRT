@@ -40,6 +40,14 @@ def Medium_System(wfile,
                   N_C,
                   N_PAH,
                   
+                  on_the_fly_dust,
+                  minSize,
+                  maxSize,
+                  centroid_small,
+                  width_small,
+                  centroid_large,
+                  width_large,
+                  
                   numDensitySamples,
                   numPropertySamples,
                   aggregateVelocity,
@@ -114,20 +122,88 @@ def Medium_System(wfile,
         print((N_idt+3)*indent+'</ParticleMedium>',file=wfile)
 
     elif med_type == 'cell':
-        print((N_idt+3)*indent+'<CellMedium filename="%s/%s" massFraction="%s" importMetallicity="%s" importTemperature="%s" maxTemperature="%s K" importVelocity="%s" importMagneticField="%s" importVariableMixParams="%s" useColumns="x-min,y-min,z-min,x-max,y-max,z-max,mass volume density,metallicity,temperature">'%(gas_fbase,gas_fname,med_Mfrac,importMetallicity,importTemperature,maxTemperature,importVelocity,importMagneticField,importVariableMixParams),file=wfile)
-        
-        dummy = MaterialMix.MatMix(wfile=wfile,
-                               Dust_Type=Dust_Type,
-                               Dust_Env=Dust_Env,
-                               N_Si=N_Si,
-                               N_C=N_C,
-                               N_PAH=N_PAH,
-                               indent=indent,
-                               indent_base=N_idt+4)
+        if on_the_fly_dust in [False,'false']:
+            print((N_idt+3)*indent+'<CellMedium filename="%s/%s" massFraction="%s" importMetallicity="%s" importTemperature="%s" maxTemperature="%s K" importVelocity="%s" importMagneticField="%s" importVariableMixParams="%s" useColumns="x-min,y-min,z-min,x-max,y-max,z-max,mass volume density,metallicity,temperature">'%(gas_fbase,gas_fname,med_Mfrac,importMetallicity,importTemperature,maxTemperature,importVelocity,importMagneticField,importVariableMixParams),file=wfile)
 
-        print((N_idt+3)*indent+'</CellMedium>',file=wfile)
+            dummy = MaterialMix.MatMix(wfile=wfile,
+                                   Dust_Type=Dust_Type,
+                                   Dust_Env=Dust_Env,
+                                   N_Si=N_Si,
+                                   N_C=N_C,
+                                   N_PAH=N_PAH,
+                                   indent=indent,
+                                   indent_base=N_idt+4)
+
+            print((N_idt+3)*indent+'</CellMedium>',file=wfile)
+        else:
+            print((N_idt+3)*indent+'<CellMedium filename="%s/%s" massType="MassDensity" massFraction="1" importMetallicity="false" importTemperature="false" maxTemperature="0 K" importVelocity="%s" importMagneticField="%s" importVariableMixParams="%s" useColumns="x-min,y-min,z-min,x-max,y-max,z-max,small carbonaceous density">'%(gas_fbase,gas_fname,importVelocity,importMagneticField,importVariableMixParams),file=wfile)
+            print((N_idt+4)*indent+'<materialMix type="MaterialMix">',file=wfile)
+            print((N_idt+5)*indent+'<ConfigurableDustMix scatteringType="HenyeyGreenstein">',file=wfile)
+            print((N_idt+6)*indent+'<populations type="GrainPopulation">',file=wfile)
+            print((N_idt+7)*indent+'<GrainPopulation numSizes="%s" normalizationType="FactorOnSizeDistribution" factorOnSizeDistribution="1">'%(N_C),file=wfile)
+            print((N_idt+8)*indent+'<composition type="GrainComposition">',file=wfile)
+            print((N_idt+9)*indent+'<DraineGraphiteGrainComposition/>',file=wfile)
+            print((N_idt+8)*indent+'</composition>',file=wfile)
+            print((N_idt+8)*indent+'<sizeDistribution type="GrainSizeDistribution">',file=wfile)
+            print((N_idt+9)*indent+'<LogNormalGrainSizeDistribution minSize="%s cm" maxSize="%s cm" centroid="%s cm" width="%s"/>'%(minSize,maxSize,centroid_small,width_small),file=wfile)
+            print((N_idt+8)*indent+'</sizeDistribution>',file=wfile)
+            print((N_idt+7)*indent+'</GrainPopulation>',file=wfile)
+            print((N_idt+6)*indent+'</populations>',file=wfile)
+            print((N_idt+5)*indent+'</ConfigurableDustMix>',file=wfile)
+            print((N_idt+4)*indent+'</materialMix>',file=wfile) 
+            print((N_idt+3)*indent+'</CellMedium>',file=wfile)
         
+            print((N_idt+3)*indent+'<CellMedium filename="%s/%s" massType="MassDensity" massFraction="1" importMetallicity="false" importTemperature="false" maxTemperature="0 K" importVelocity="%s" importMagneticField="%s" importVariableMixParams="%s" useColumns="x-min,y-min,z-min,x-max,y-max,z-max,large carbonaceous density">'%(gas_fbase,gas_fname,importVelocity,importMagneticField,importVariableMixParams),file=wfile)
+            print((N_idt+4)*indent+'<materialMix type="MaterialMix">',file=wfile)
+            print((N_idt+5)*indent+'<ConfigurableDustMix scatteringType="HenyeyGreenstein">',file=wfile)
+            print((N_idt+6)*indent+'<populations type="GrainPopulation">',file=wfile)
+            print((N_idt+7)*indent+'<GrainPopulation numSizes="%s" normalizationType="FactorOnSizeDistribution" factorOnSizeDistribution="1">'%(N_C),file=wfile)
+            print((N_idt+8)*indent+'<composition type="GrainComposition">',file=wfile)
+            print((N_idt+9)*indent+'<DraineGraphiteGrainComposition/>',file=wfile)
+            print((N_idt+8)*indent+'</composition>',file=wfile)
+            print((N_idt+8)*indent+'<sizeDistribution type="GrainSizeDistribution">',file=wfile)
+            print((N_idt+9)*indent+'<LogNormalGrainSizeDistribution minSize="%s cm" maxSize="%s cm" centroid="%s cm" width="%s"/>'%(minSize,maxSize,centroid_large,width_large),file=wfile)
+            print((N_idt+8)*indent+'</sizeDistribution>',file=wfile)
+            print((N_idt+7)*indent+'</GrainPopulation>',file=wfile)
+            print((N_idt+6)*indent+'</populations>',file=wfile)
+            print((N_idt+5)*indent+'</ConfigurableDustMix>',file=wfile)
+            print((N_idt+4)*indent+'</materialMix>',file=wfile) 
+            print((N_idt+3)*indent+'</CellMedium>',file=wfile)
+            
+            print((N_idt+3)*indent+'<CellMedium filename="%s/%s" massType="MassDensity" massFraction="1" importMetallicity="false" importTemperature="false" maxTemperature="0 K" importVelocity="%s" importMagneticField="%s" importVariableMixParams="%s" useColumns="x-min,y-min,z-min,x-max,y-max,z-max,small silicates density">'%(gas_fbase,gas_fname,importVelocity,importMagneticField,importVariableMixParams),file=wfile)
+            print((N_idt+4)*indent+'<materialMix type="MaterialMix">',file=wfile)
+            print((N_idt+5)*indent+'<ConfigurableDustMix scatteringType="HenyeyGreenstein">',file=wfile)
+            print((N_idt+6)*indent+'<populations type="GrainPopulation">',file=wfile)
+            print((N_idt+7)*indent+'<GrainPopulation numSizes="%s" normalizationType="FactorOnSizeDistribution" factorOnSizeDistribution="1">'%(N_C),file=wfile)
+            print((N_idt+8)*indent+'<composition type="GrainComposition">',file=wfile)
+            print((N_idt+9)*indent+'<DraineSilicateGrainComposition/>',file=wfile)
+            print((N_idt+8)*indent+'</composition>',file=wfile)
+            print((N_idt+8)*indent+'<sizeDistribution type="GrainSizeDistribution">',file=wfile)
+            print((N_idt+9)*indent+'<LogNormalGrainSizeDistribution minSize="%s cm" maxSize="%s cm" centroid="%s cm" width="%s"/>'%(minSize,maxSize,centroid_small,width_small),file=wfile)
+            print((N_idt+8)*indent+'</sizeDistribution>',file=wfile)
+            print((N_idt+7)*indent+'</GrainPopulation>',file=wfile)
+            print((N_idt+6)*indent+'</populations>',file=wfile)
+            print((N_idt+5)*indent+'</ConfigurableDustMix>',file=wfile)
+            print((N_idt+4)*indent+'</materialMix>',file=wfile) 
+            print((N_idt+3)*indent+'</CellMedium>',file=wfile)
         
+            print((N_idt+3)*indent+'<CellMedium filename="%s/%s" massType="MassDensity" massFraction="1" importMetallicity="false" importTemperature="false" maxTemperature="0 K" importVelocity="%s" importMagneticField="%s" importVariableMixParams="%s" useColumns="x-min,y-min,z-min,x-max,y-max,z-max,large silicates density">'%(gas_fbase,gas_fname,importVelocity,importMagneticField,importVariableMixParams),file=wfile)
+            print((N_idt+4)*indent+'<materialMix type="MaterialMix">',file=wfile)
+            print((N_idt+5)*indent+'<ConfigurableDustMix scatteringType="HenyeyGreenstein">',file=wfile)
+            print((N_idt+6)*indent+'<populations type="GrainPopulation">',file=wfile)
+            print((N_idt+7)*indent+'<GrainPopulation numSizes="%s" normalizationType="FactorOnSizeDistribution" factorOnSizeDistribution="1">'%(N_C),file=wfile)
+            print((N_idt+8)*indent+'<composition type="GrainComposition">',file=wfile)
+            print((N_idt+9)*indent+'<DraineSilicateGrainComposition/>',file=wfile)
+            print((N_idt+8)*indent+'</composition>',file=wfile)
+            print((N_idt+8)*indent+'<sizeDistribution type="GrainSizeDistribution">',file=wfile)
+            print((N_idt+9)*indent+'<LogNormalGrainSizeDistribution minSize="%s cm" maxSize="%s cm" centroid="%s cm" width="%s"/>'%(minSize,maxSize,centroid_large,width_large),file=wfile)
+            print((N_idt+8)*indent+'</sizeDistribution>',file=wfile)
+            print((N_idt+7)*indent+'</GrainPopulation>',file=wfile)
+            print((N_idt+6)*indent+'</populations>',file=wfile)
+            print((N_idt+5)*indent+'</ConfigurableDustMix>',file=wfile)
+            print((N_idt+4)*indent+'</materialMix>',file=wfile) 
+            print((N_idt+3)*indent+'</CellMedium>',file=wfile)
+                  
     print((N_idt+2)*indent+'</media>',file=wfile)
 
     if med_type in ['particle','cell']:

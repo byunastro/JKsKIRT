@@ -15,7 +15,7 @@ del_input = False # If you want to delete the input particle/gaseous files after
 
 skirt_dir = '/storage5/scratch/library/SKIRT/release/SKIRT/main/' # the path where the executable skirt object reside
 N_thread = 40 # the number of the thread you want to use
-N_phot = 7e7 # The number of the photon packets
+N_phot = 1e7 # The number of the photon packets
 
 grid_unit = 'kpc' # The unit of the grid setting 
 grid_uniform_size = 200 #15
@@ -124,7 +124,7 @@ wavelengthOutputStyle = 'Wavelength' # Possible options: 'Wavelength', 'Frequenc
 fluxOutputStyle = 'Wavelength' # Possible options: 'Wavelength' (F_lambda), 'Frequency' (F_nu), and 'Neutral' (lambda*F_lambda or nu*F_nu)
 
 # Cosmology setting
-z_red = 0 # assumed redshift that the source reside 
+z_red = 3 # assumed redshift that the source reside 
 H_0 = 0.675 # assumed Hubble constant
 Om_m = 0.31 # assumed matter density
 
@@ -134,8 +134,8 @@ Om_m = 0.31 # assumed matter density
 
 source_unit = 'micron' # unit of the radiated source SED
 wv_source_min = 0.091 # minimum wavelength of the source SED
-wv_source_max = 1 # maximum "
-wv_source_del = 0.001 # Delta(Wvl) 
+wv_source_max = 2.5 # maximum "
+wv_source_del = 0.01 # Delta(Wvl) 
 
 #------------------------------------------------------------#
 #!!@@ you don't have to care about these parameters @@!!#
@@ -143,7 +143,7 @@ source_bias = 0.5
 bias_type = 'log'
 bias_unit = 'micron' 
 wv_bias_min = 0.091 
-wv_bias_max = 1 
+wv_bias_max = 2.5 
 source_weight = 1 
 bias_deg = 0.5 
 #------------------------------------------------------------#
@@ -207,6 +207,13 @@ importMagneticField = 'false' # sadly, we don't have this info.
                               # but not now. 
 importVariableMixParams = 'false' # This can be used for NC 
 
+on_the_fly_dust = True
+minSize = 1e-7 #[cm]
+maxSize = 1e-4 #[cm]
+centroid_small = 5e-7 #[cm]
+centroid_large = 1e-5 #[cm]
+width_small = 7.5e-1
+width_large = 7.5e-1
 
 Dust_Type = 'themis' # Dust model for the gaseous medium
                      # Possible options: 'mrn', 'zubko', 'drain_li', 'weingartner_draine', 'trust', 'themis'
@@ -259,13 +266,16 @@ includeSDSS = 'true' # if you want to get 2D SDSS filter image
 include2MASS = 'true' # if you want to get 2D 2MASS filter image
 includeWISE = 'false' # if you want to get 2D WISE filter image
 includeHERSCHEL = 'false' # if you want to get 2D HERSCHEL filter image
+CustomFilterList = ['/storage5/scratch/CustomFilter/JWST/JWST_F356W.txt']
 
 
 inst_dist_unit = 'Mpc' 
 inst_dist = 1000 # the distance between the observer and the object
                  # If your redshift setting is >0 and dist==0, then the distance will be calculated with the given redshift
                  # but if this value is above 0, than the flux will be calculated with this distance
-
+if z_red > 0:
+    inst_dist = 0
+        
 inc_default = 0
 azm_default = 0
 roll_default = 0
