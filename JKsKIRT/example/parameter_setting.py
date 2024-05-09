@@ -81,7 +81,7 @@ Age_Cut = 0.01 # Demarcation cut for the separation
                # Unit: [Gyr]
 
 adaptive_smoothing = True
-n_targ_nbr = 5
+n_targ_nbr = 10
 n_job_smoothing = 32
     
 # When we dealing with the gaseous cells,
@@ -124,7 +124,7 @@ wavelengthOutputStyle = 'Wavelength' # Possible options: 'Wavelength', 'Frequenc
 fluxOutputStyle = 'Wavelength' # Possible options: 'Wavelength' (F_lambda), 'Frequency' (F_nu), and 'Neutral' (lambda*F_lambda or nu*F_nu)
 
 # Cosmology setting
-z_red = 3 # assumed redshift that the source reside 
+z_red = 1.3 # assumed redshift that the source reside 
 H_0 = 0.675 # assumed Hubble constant
 Om_m = 0.31 # assumed matter density
 
@@ -264,9 +264,11 @@ def_wv_grid = 'pre-defined'
 includeGALEX = 'true' # if you want to get 2D GALEX filter image
 includeSDSS = 'true' # if you want to get 2D SDSS filter image
 include2MASS = 'true' # if you want to get 2D 2MASS filter image
-includeWISE = 'false' # if you want to get 2D WISE filter image
-includeHERSCHEL = 'false' # if you want to get 2D HERSCHEL filter image
-CustomFilterList = ['/storage5/scratch/CustomFilter/JWST/JWST_F356W.txt']
+includeWISE = 'true' # if you want to get 2D WISE filter image
+includeHERSCHEL = 'true' # if you want to get 2D HERSCHEL filter image
+CustomFilterList = ['/storage5/scratch/CustomFilter/JWST/JWST_F115W.txt',
+                    '/storage5/scratch/CustomFilter/JWST/JWST_F150W.txt',
+                    '/storage5/scratch/CustomFilter/JWST/JWST_F200W.txt']
 
 
 inst_dist_unit = 'Mpc' 

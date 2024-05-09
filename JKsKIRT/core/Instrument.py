@@ -161,6 +161,33 @@ def Inst_System(
                     print((N_idt+5)*indent+'<ConfigurableBandWavelengthGrid>',file=wfile)
                     print((N_idt+6)*indent+'<bands type="Band">',file=wfile)
                     
+                    #includeGALEX,  includeSDSS,  include2MASS,    includeWISE, includeHERSCHEL,
+                    if includeGALEX in [True,'true']:
+                        print((N_idt+7)*indent+'<BroadBand bandName="GALEX_GALEX_FUV"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="GALEX_GALEX_NUV"/>',file=wfile)
+                    if includeSDSS in [True,'true']:
+                        print((N_idt+7)*indent+'<BroadBand bandName="SLOAN_SDSS_U"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="SLOAN_SDSS_G"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="SLOAN_SDSS_R"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="SLOAN_SDSS_I"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="SLOAN_SDSS_Z"/>',file=wfile)
+                    if include2MASS in [True,'true']:
+                        print((N_idt+7)*indent+'<BroadBand bandName="2MASS_2MASS_J"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="2MASS_2MASS_H"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="2MASS_2MASS_KS"/>',file=wfile)
+                    if includeWISE in [True,'true']:
+                        print((N_idt+7)*indent+'<BroadBand bandName="WISE_WISE_W1"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="WISE_WISE_W2"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="WISE_WISE_W3"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="WISE_WISE_W4"/>',file=wfile)
+                    if includeHERSCHEL in [True,'true']:
+                        print((N_idt+7)*indent+'<BroadBand bandName="HERSCHEL_PACS_70"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="HERSCHEL_PACS_100"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="HERSCHEL_PACS_160"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="HERSCHEL_SPIRE_250"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="HERSCHEL_SPIRE_350"/>',file=wfile)
+                        print((N_idt+7)*indent+'<BroadBand bandName="HERSCHEL_SPIRE_500"/>',file=wfile)
+                    
                     cfl = 0
                     while cfl < len(CustomFilterList):
                         print((N_idt+7)*indent+'<FileBand filename="%s"/>'%(CustomFilterList[cfl]),file=wfile)
